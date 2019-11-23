@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>React! React! React!</title>
+
+    <!--
+        these 2 lines bring in the core React library
+    -->
+    <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+
+    <!-- 
+        adding reference to the Babel JavaScript compiler, turn JSX to JavaScript
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.
+js"></script>
+
+    <style>
+        #container {
+        padding: 50px;
+        background-color:midnightblue;
+        }
+
+        #container h1 {
+            font-size: 144px;
+            font-family: sans-serif;
+            color: crimson;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+    <div id="container"></div>
+    <!-- 
+        the render method takes in 2 arguments:
+        1) the HTML-like elements (aka JSX) you wish to OUTPUT
+        2) the location in the DOM that React will render the JSX into
+    -->
+    <script type="text/babel">
+
+        ReactDOM.render(
+            <h1> Spiderman </h1>,
+            document.querySelector("#container")
+
+        )
+        
+    </script>
+
+</body>
+
+</html>
