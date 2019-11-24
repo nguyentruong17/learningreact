@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>React! React! React!</title>
+
+    <!--
+        these 2 lines bring in the core React library
+    -->
+    <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+
+    <!-- 
+        adding reference to the Babel JavaScript compiler, turn JSX to JavaScript
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.
+js"></script>
+
+    <style>
+        #container {
+            padding: 50px;
+            background-color: indianred;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div id="container"></div>
+    <!-- 
+        the render method takes in 2 arguments:
+        1) the HTML-like elements (aka JSX) you wish to OUTPUT
+        2) the location in the DOM that React will render the JSX into
+    -->
+    <script type="text/babel">
+
+        const Letter = React.createClass({
+            render() {
+
+                //CSS properties in JavaSript, a bit different from the stand-alone CSS
+                const letterStyle = {
+                    padding: 10,
+                    margin: 10,
+                    backgroundColor: this.props.rgbColor || "#ffde00", //give default value for backgroundColor to #ffde00
+                    color: "#333",
+                    display: "inline-block",
+                    fontFamily: "monospace",
+                    fontSize: 32,
+                    textAlign: "center",
+                };
+
+                //for properties with numerical valye sychg as padding, margin, forSize
+                //  we didnt specify the px suffix like in plain CSS (React will do this in runtime)
+                //however, there are some properties React won't do so
+                //  for reference: https://facebook.github.io/react/tips/style-props-value-px.html
+
+                return(
+                    //inline approach for styling that React prefers  
+                    <div style = {letterStyle}> 
+                        {this.props.children}
+                    </div>
+                );
+            }
+        });
+
+        const destination = document.querySelector("#container")
+
+        ReactDOM.render(
+            <div>
+                <Letter rgbColor="#58B3FF">L</Letter>
+                <Letter rgbColor="#FF605F">O</Letter>
+                <Letter rgbColor="#FFD52E">V</Letter>
+                <Letter rgbColor="#49DD8E">E</Letter> 
+            </div>,
+            destination
+
+        )
+        
+    </script>
+
+</body>
+
+</html>
