@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>More Components</title>
+
+    <!--
+        these 2 lines bring in the core React library
+    -->
+    <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+
+    <!-- 
+        adding reference to the Babel JavaScript compiler, turn JSX to JavaScript
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.
+js"></script>
+
+    <style>
+        #container {
+            padding: 50px;
+            background-color: blanchedalmond;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div id="container"></div>
+    <!-- 
+        the render method takes in 2 arguments:
+        1) the HTML-like elements (aka JSX) you wish to OUTPUT
+        2) the location in the DOM that React will render the JSX into
+    -->
+
+
+
+    <script type="text/babel">
+
+        const Card = React.createClass({
+            render() {
+                const cardStyle = {
+                    height: 200,
+                    width: 150,
+                    padding: 0,
+                    backgroundColor: "#FFF",
+                    WebkitFilter: "drop-shadow(0px 0px 5px #666)", //vender-prefixed property, capitalize the first letter as well as the camel case 
+                    filter: "drop-shadow(0px 0px 5px #666)"
+                };
+
+                return (
+                    <div style={cardStyle}>
+                        <Square color={this.props.color || "#000000"} /> {/*component composability*/}
+                        <Label color={this.props.color || "#000000"} />
+                    </div>
+                );
+            }
+        });
+
+        const Square = React.createClass({
+            render() {
+                const squareStyle = {
+                    height: 150,
+                    backgroundColor: this.props.color 
+                };
+
+                return (
+                    <div style={squareStyle}>
+
+                    </div>
+                )
+            }
+        });
+
+        const Label = React.createClass({
+            render() {
+                const labelStyle = {
+                    fontFamily: "sans-serif",
+                    fontWeight: "bold",
+                    padding: 13,
+                    margin: 0
+                };
+
+                return (
+                    <p style={labelStyle}>{this.props.color}</p>
+                )
+            }
+        });
+
+        const destination = document.querySelector("#container")
+        //can hard code to generate a random color, maybe?
+        const color = "#034694" // Chelsea - London is Blue!
+
+        ReactDOM.render(
+            <div>
+                <Card color={color} />
+            </div>,
+            destination
+
+        )
+
+    </script>
+
+</body>
+
+</html>
