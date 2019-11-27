@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>More State!</title>
+    <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min
+.js"></script>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/babel">
+        const LightningCounter = React.createClass({
+            getInitialState() { //this method runs before the componet gets rendered
+                return {
+                    strikes: 0 //it works like a constructor for the state
+                };  // return an object, so wrapped in curly braces? 
+            },
+
+            timerTick() { //React autobinding helps this method maintain context (hmmhmm?)
+                this.setState({ //the method takes in an object as its  argument
+                    strikes: this.state.strikes + 100 // this object contains all the properties you want to MERGE INTO the state object
+                });
+            },
+
+            componentDidMount() {
+                setInterval(this.timerTick, 1000); // calls the method timerTick every 1000 miliseconds
+            },
+
+            render() {
+
+                const counterStyle = {
+                    color: "#66FFFF",
+                    fontSize: 50
+                }
+
+                const count = this.state.strikes.toLocaleString(); // for example, toLocaleString('thai') will render 1234.5 to 1.234,5
+                return (
+                    <h1 style={counterStyle}>{count}</h1>
+                );
+            }
+
+
+        });
+
+        const LightningCounterDisplay = React.createClass({
+            render() {
+                const divStyle = {
+                    width: 250,
+                    textAlign: "center",
+                    backgroundColor: "black",
+                    padding: 40,
+                    fontFamily: "sans-serif",
+                    color: "#999",
+                    borderRadius: 10
+                };
+
+                const commonTextStyle = {
+                    margin: 0,
+                    padding: 0
+                };
+
+                const textStyles = {
+                    emphasis: {
+                        fontSize: 38,
+                        ...commonTextStyle // spread operator, "spread" each value of the commonStyle object based on its defined order
+                    },
+                    smallEmphasis: {
+                        ...commonTextStyle
+                    },
+                    small: {
+                        fontSize: 17,
+                        opacity: 0.5,
+                        ...commonTextStyle
+                    }
+                };
+
+
+                return (
+                    <div style={divStyle}>
+                        <LightningCounter />
+                        <h2 style={textStyles.smallEmphasis}>LIGHTNING STRIKES</h2>
+                        <h2 style={textStyles.emphasis}>WORLDWIDE</h2>
+                        <p style={textStyles.small}>(since you loaded this example)</p>
+                    </div>
+                );
+            }
+        });
+        ReactDOM.render(
+            <LightningCounterDisplay />,
+            document.querySelector("#container")
+        );
+    </script>
+</body>
+
+</html>
