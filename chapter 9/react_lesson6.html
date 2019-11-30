@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>More State!</title>
+    <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min
+.js"></script>
+
+    <style>
+        #container {
+            padding: 50px;
+            background-color:blanchedalmond;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/babel">
+        const numCircles = parseInt(prompt("How many circles do you want?: ", "1")) || 1
+
+        //got from https://stackoverflow.com/questions/1484506/random-color-generator
+        const generateColor = () => {
+            const letters = '0123456789ABCDEF'
+            var color = '#'
+            for (var i=0; i < 6; i++){
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color
+        }
+        const Circle = React.createClass({
+            
+            getInitialState(){
+                return {
+                    color: this.props.rgbColor
+                };
+            },
+            
+            changeColor() {
+                this.setState({
+                    color: generateColor()
+                });
+            },
+            componentDidMount(){
+                setInterval(this.changeColor, 1000) // change color every 1 second
+            },
+            render: function () {
+                var circleStyle = {
+                    padding: 10,
+                    margin: 20,
+                    display: "inline-block",
+                    backgroundColor: this.state.color,
+                    borderRadius: "50%",
+                    width: 100,
+                    height: 100,
+                };
+                return (
+                    <div style={circleStyle}>
+                    </div>
+                );
+            }
+        });
+
+        const circles = (numCircles) => {
+            const renderedCircles = []
+            for (var i = 0; i < numCircles; i++){
+                // the prop key acts as an 'ID' for each component --> needs to be unique
+                renderedCircles.push(<Circle key={new Date().getTime().toString() + i} rgbColor = {generateColor()}/>) 
+            }
+
+            return renderedCircles
+        }
+
+        const destination = document.querySelector("#container");
+
+        ReactDOM.render(
+            <div>
+                {circles(numCircles)} {/* here's the interesting part!*/}
+            </div>,
+            destination
+        );
+    </script>
+</body>
+
+</html>
