@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>React Shenanigans!</title>
+
+    <!--
+        these 2 lines bring in the core React library
+    -->
+    <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+
+    <!-- 
+        adding reference to the Babel JavaScript compiler, turn JSX to JavaScript
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.
+js"></script>
+
+    <style>
+        #container {
+            padding: 50px;
+            background-color: blanchedalmond;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div id="container"></div>
+    <!-- 
+        the render method takes in 2 arguments:
+        1) the HTML-like elements (aka JSX) you wish to OUTPUT
+        2) the location in the DOM that React will render the JSX into
+    -->
+
+
+
+    <script type="text/babel">
+        const Card = React.createClass({
+            getInitialState: function() {
+
+                const getIndexToChange =  (array) => {
+
+                    let index = -1
+                    for (var i = 0; i < 3; i++){
+                        if (array[i] != "00"){
+                            index = i;
+                            break;
+                        }
+                    }
+                    return index
+                };
+
+                return {
+                    colorArray: this.props.colorArray,
+                    indexToChange: getIndexToChange(this.props.colorArray)
+                };
+            },
+
+            increase: function(e){ //event handler
+
+                let curArray = this.state.colorArray;
+
+                // convert the string of hex num to dec num
+                let curCount = parseInt(curArray[this.state.indexToChange], 16);
+                                
+
+                if (e.shiftKey){ //using the shiftKey property that exists on the SyntheticEvent when using the mouse
+                    curCount += 10; //if press shift while clicking
+                } else {
+                    curCount += 1;
+                }
+
+                //make sure it's not going over 255
+                if (curCount > 255){
+                    curCount = 255;
+                }
+
+
+                //convert back: dec num to string of hex
+                curArray[this.state.indexToChange] = curCount.toString(16).toUpperCase();
+
+                this.setState({
+                    colorArray: curArray
+                });
+            },
+
+            decrease: function(e){ //event handler
+                
+                let curArray = this.state.colorArray;
+
+                // convert the string of hex num to dec num
+                let curCount = parseInt(curArray[this.state.indexToChange], 16);
+
+                
+                if (e.shiftKey){ //using the shiftKey property that exists on the SyntheticEvent when using the mouse
+                    curCount -= 10; //if press shift while clicking
+                } else {
+                    curCount -= 1;
+                }
+
+                //make sure it's not going below 0
+                if (curCount < 0){
+                    curCount = 0;
+                }
+
+                //convert back: dec num to string of hex
+                curArray[this.state.indexToChange] = curCount.toString(16).toUpperCase();
+
+                this.setState({
+                    colorArray: curArray
+                });
+            },
+
+            render() {
+                const cardStyle = {
+                    display: "inline-block",
+                    height: 200,
+                    width: 150,
+                    padding: 0,
+                    margin: 10,
+                    textAlign: "center",
+                    backgroundColor: "#FFF",
+                    WebkitFilter: "drop-shadow(0px 0px 5px #666)", //vender-prefixed property, capitalize the first letter as well as the camel case 
+                    filter: "drop-shadow(0px 0px 5px #666)"
+                };
+
+                function fromArrayToColor(array){
+                    let color = "#"
+                    for (var i = 0; i < 3; i++){
+                    color += (array[i])
+                    }
+                    return color
+                };
+                
+                return (
+                    <div style={cardStyle}>
+                        <Square color={fromArrayToColor(this.state.colorArray)} /> {/*component composability*/}
+                        <div>
+                            <Button clickHandler={this.decrease} display = {"-"}/>
+                            <Label color={fromArrayToColor(this.state.colorArray)} /> {/*mid component*/}
+                            <Button clickHandler={this.increase} display = {"+"}/>
+                        </div>
+                        
+                    </div>
+                );
+            }
+        });
+
+        const Square = React.createClass({
+            render() {
+                const squareStyle = {
+                    height: 150,
+                    backgroundColor: this.props.color
+                };
+
+                return (
+                    <div style={squareStyle}>
+
+                    </div>
+                )
+            }
+        });
+
+        const Label = React.createClass({
+            render() {
+                const labelStyle = {
+                    fontFamily: "sans-serif",
+                    fontWeight: "bold",
+                    padding: 13,
+                    margin: 0,
+                    textAlign: "center",
+                    display: "inline",
+                    width: "70%",
+                    height: "100%"
+                };
+
+                return (
+                    <p style={labelStyle}>{this.props.color}</p>
+                )
+            }
+        });
+
+
+        const Button = React.createClass({
+            render: function(){
+                const textStyle = {
+                    fontSize: 10,
+                    fontFamily: "sans-serif",
+                    color: "#333",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    display: "inline",
+                    width: "15%",
+                    height: "100%"
+                };
+
+                return (
+                    <button style={textStyle} onClick={this.props.clickHandler}>
+                        {this.props.display}
+                    </button>
+                );
+            }
+
+        })
+
+        
+        
+        //const sampleColorArray = ["00", "7F", "00"]
+
+        function createCards() {
+            const renderedCards = []
+
+            //push red-green-blue cards
+            for (var i = 0; i < 3; i++){
+                let colorArray = ["00", "00", "00"]
+                colorArray[i] = "7F" //127 in dec
+                renderedCards.push(<Card key={new Date().getTime().toString() + i} colorArray = {colorArray}/>) 
+            }
+            return renderedCards
+
+        }
+
+        const destination = document.querySelector("#container")
+
+        ReactDOM.render(
+            <div>
+                {/*<Card colorArray={sampleColorArray}/>*/}
+                {createCards()}
+            </div>,
+            destination
+
+        )
+
+        
+
+    </script>
+
+</body>
+
+</html>
