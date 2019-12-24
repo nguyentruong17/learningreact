@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>To Do List</title>
+    <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min
+.js"></script>
+    <style>
+        body {
+            padding: 50px;
+            background-color: blanchedalmond;
+            font-family: sans-serif;
+        }
+
+        .todoListMain .header input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #FFF;
+        }
+
+        .todoListMain .header button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #0066FF;
+            color: #FFF;
+            border: 2px solid #0066FF;
+        }
+
+        .todoListMain .header button:hover {
+            background-color: red;
+            border: 2px solid red;
+            cursor: pointer;
+        }
+
+        .todoListMain .taskList {
+            list-style: none;
+            padding-left: 0;
+            width: 255px;
+        }
+
+        .todoListMain .taskList li {
+            color: #333;
+            background-color: rgba(255, 255, 255, .5);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .todoListMain .taskList li:hover {
+            background-color: #FF9900;
+            border: 2px solid #FF9900;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+    </div>
+    <script type="text/babel">
+        const destination = document.querySelector("#container");
+
+        const TodoList = React.createClass({
+            getInitialState() {
+                return {
+                    items: []
+                };
+            },
+
+            addItem(e) {
+
+                const curArray = this.state.items
+                curArray.push(
+                    // this is an object
+                    {
+                        key: Date.now(),
+                        text: this._input.value
+                    }
+                )
+
+                //updating the items
+                this.setState({
+                    items: curArray
+                });
+
+                console.log(this.state.items)
+
+                //blank the input
+                this._input.value = '';
+
+                //override the default onSubmit event, which will trigger the browser's  default POST behaviour - which will refresh the page
+                e.preventDefault();
+            },
+
+            render() {
+                return (
+                    <div className='todoListMain'>
+                        <div className='header'>
+                            <form onSubmit={this.addItem}>
+                                <input
+                                    ref={(el) => this._input = el}
+                                    placeholder='your task go here...'>
+                                </input>
+                                <button type='submit'>add</button>
+                            </form>
+                            <TodoItems tasks={this.state.items} />
+                        </div>
+                    </div>
+                );
+            }
+        });
+
+        const TodoItems = React.createClass({
+            render() {
+                function visualizeTask(item) {
+                    return (<li key={item.key}>{item.text}</li>)
+                };
+
+                //https://medium.com/@ExplosionPills/map-vs-for-loop-2b4ce659fb03 --> good article explaining the map function
+                const renderedTasks = this.props.tasks.map(visualizeTask);
+
+                return (
+                    <ul className='taskList'>
+                        {renderedTasks}
+                    </ul>
+                );
+            }
+
+        });
+
+        ReactDOM.render(
+            <div>
+                <TodoList />
+            </div>,
+            destination
+        );
+    </script>
+</body>
+</html>
